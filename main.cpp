@@ -1,6 +1,7 @@
 # include <bits/stdc++.h>
 # include <iostream>
 # include <fstream>
+# include "rapidxml/rapidxml.hpp"
 using namespace std;
 
 class DoxygenConfig
@@ -61,9 +62,25 @@ class DoxygenConfig
         }
 };
 
+class XMLParser
+{
+    private:
+        void generateXMLFiles()
+        {
+            system("doxygen Doxyfile");
+        }
+
+    public:
+        XMLParser()
+        {
+            generateXMLFiles();
+        }
+};
+
 int main(void)
 {
     DoxygenConfig tmp;
+    XMLParser tmp2;
 
     return 0;
 }
