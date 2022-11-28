@@ -1,6 +1,7 @@
 # include <bits/stdc++.h>
 # include <iostream>
 # include <fstream>
+# include <regex>
 # include "rapidxml/rapidxml.hpp"
 using namespace std;
 
@@ -70,16 +71,51 @@ class XMLParser
             system("doxygen Doxyfile");
         }
 
+        void getClasses()
+        {
+            //system("cd xml");
+            string line;
+            regex class_regex("(  <compound refid=\".*\" kind=\"class\">.*)");
+            regex class_name("(<name>.*</name>)");
+            ifstream index;
+            index.open("./xml/index.xml");
+            while(index)
+            {
+                getline(index,line);
+                if(line=="-1")
+                {
+                    break;
+                }
+                else if(regex_match(line,class_regex))
+                {
+                    smatch match_flag;
+                    regex_search(line,match_flag,class_name);
+                    ofstream class_file;
+                    class_file.open("class.txt",ios_base::app);
+                    int i=1;
+                    for(auto x : match_flag)
+                    {
+                        if(i==1)
+                        {
+                            class_file<<x<<endl;                        
+                        }
+                        i=(i+1)%2;
+                    }
+                }
+            }
+        }
+
     public:
         XMLParser()
         {
             generateXMLFiles();
+            getClasses();
         }
 };
 
 int main(void)
 {
-    DoxygenConfig tmp;
+    DoxygenConfig tmp1;
     XMLParser tmp2;
 
     return 0;
