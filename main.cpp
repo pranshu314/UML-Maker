@@ -1,6 +1,7 @@
 # include <bits/stdc++.h>
 # include <iostream>
 # include <fstream>
+//# include <boost/regex.hpp>
 # include <regex>
 # include <string.h>
 using namespace std;
@@ -147,10 +148,168 @@ class Class_txtGenerator
         }
 };
 
+class IndividualClassParser
+{
+    private:
+        void singleClassFileGenerator(string class_name, string singleFileName)
+        {
+            cout<<"\n1\n";
+            cout<<singleFileName;
+            cout<<"\n";
+            regex derived_regex(".*<derivedcompoundref refid=.*");
+            regex derived_name_regex(">.*<");
+            regex variable_regex(".*<memberdef kind=\"variable\" .*");
+            regex function_regex(".*<memberdef kind=\"function\" .*");
+
+            ifstream work_file;
+            string line;
+            string line2;
+            work_file.open(singleFileName);
+            while(work_file)
+            {
+                //cout<<"\n2\n";
+                getline(work_file,line);
+                if(line!="-1" && line2!=line)
+                {
+                    if(regex_match(line,derived_regex))
+                    {
+                        cout<<"\n3\n";
+                        smatch match_flag;
+                        regex_search(line,match_flag,derived_name_regex);
+                        ofstream inheritance_file;
+                        inheritance_file.open("inheritance.txt", ios_base::app);
+                        inheritance_file<<class_name<<" : ";
+                        for(auto x : match_flag)
+                        {
+                            inheritance_file<<x<<endl;
+                        }
+                    }
+                    if(regex_match(line,variable_regex))
+                    {
+                        cout<<"\n4\n";
+                        string tmp_line;
+                        string prot;
+                        string _static;
+                        string type;
+                        string name;
+
+                        size_t found_prot = line.find("prot=");
+                        if(line.substr(int(found_prot)+6,6)=="public")
+                        {
+                            prot="public";
+                        }
+                        else if(line.substr(int(found_prot)+6,7)=="private")
+                        {
+                            prot="private";
+                        }
+                        else if(line.substr(int(found_prot)+6,9)=="protected")
+                        {
+                            prot="protected";
+                        }
+
+                        size_t found_static = line.find("static=");
+                        if(line.substr(int(found_static)+8,3)=="yes")
+                        {
+                            _static="static";
+                        }
+                        else if(line.substr(int(found_static)+8,2)=="no")
+                        {
+                            _static="";
+                        }
+                        
+                        regex type_regex(".*<type>.*</type>");
+                        getline(work_file,tmp_line);
+                        if(regex_match(tmp_line,type_regex))
+                        {
+                            regex type_2_regex(".*<type><ref .*>.*</ref></type>");
+                            if(regex_match(tmp_line,type_2_regex))
+                            {
+                                size_t found_type = tmp_line.find(">");
+                                found_type=tmp_line.find(">",found_type+1);
+                                type=tmp_line.substr(int(found_type)+1,tmp_line.length()-13-int(found_type)-1);
+                            }
+                            else
+                            {
+                                type=tmp_line.substr(14,tmp_line.length()-21);
+                            }
+                        }
+                        getline(work_file,tmp_line);
+                        getline(work_file,tmp_line);
+                        regex name_regex(".*<name>.*</name>");
+                        getline(work_file,tmp_line);
+                        if(regex_match(tmp_line,name_regex))
+                        {
+                            name=tmp_line.substr(14,tmp_line.length()-21);
+                        }
+                        string var="variable :: ";
+                        string tmp_colon=" : ";
+                        string tmp_semicolon=" ; ";
+                        string tmp_space=" ";
+                        string final_member_name = var+prot+tmp_colon+name+tmp_semicolon+_static+tmp_space+type;
+
+                        ofstream single_class_file;
+                        string file_name=class_name+".txt";
+                        single_class_file.open(file_name, ios_base::app);
+                        single_class_file<<final_member_name<<endl;
+                    }
+                    if(regex_match(line,function_regex))
+                    {
+                        cout<<"\n5\n";
+                    }
+
+                    line2=line;
+                }
+                else if(line==line2)
+                {
+                    continue;
+                }
+                else
+                {
+                    break;
+                }
+            }
+
+        }
+
+        void singleClassFileNameGenerator()
+        {
+            ifstream class_file;
+            string line;
+            class_file.open("class.txt");
+            while(class_file)
+            {
+                getline(class_file,line);
+                if(line=="-1")
+                {
+                    break;
+                }
+                else
+                {
+                    string class_name=line;
+                    string singleFileName="class";
+                    string tmp1=".xml";
+                    string tmp2="xml/";
+                    singleFileName+=class_name;
+                    singleFileName+=tmp1;
+                    singleFileName=tmp2+singleFileName;
+                    singleClassFileGenerator(class_name,singleFileName);
+                }
+            }
+        }
+
+    public:
+        IndividualClassParser()
+        {
+            singleClassFileNameGenerator();
+        }
+
+};
+
 int main(void)
 {
     DoxygenConfig tmp1;
     Class_txtGenerator tmp2;
+    IndividualClassParser tmp3;
 
     return 0;
 }
