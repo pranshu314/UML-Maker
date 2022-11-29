@@ -2,7 +2,7 @@
 # include <iostream>
 # include <fstream>
 # include <regex>
-# include "rapidxml/rapidxml.hpp"
+# include <string.h>
 using namespace std;
 
 class DoxygenConfig
@@ -105,11 +105,45 @@ class XMLParser
             }
         }
 
+        void finalizeClasses_txt()
+        {
+            vector<string> class_vector;
+            vector<string>::iterator v_itr;
+            fstream class_file;
+            string line;
+            class_file.open("class.txt", ios::in | ios::out);
+            while(class_file)
+            {
+                int st_location=class_file.tellg();
+                getline(class_file,line);
+                if(line=="-1")
+                {
+                    break;
+                }
+                else if(line.size()!=0)
+                {
+                    int l=line.length()-13;
+                    string req_line=line.substr(6,l);
+                    class_vector.push_back(req_line);
+                }
+            }
+            class_file.close();
+            system("rm class.txt");
+            ofstream class_file1;
+            class_file1.open("class.txt", ios::app);
+            for(v_itr=class_vector.begin(); v_itr!=class_vector.end(); v_itr++)
+            {
+                string req=*v_itr;
+                class_file1<<req<<endl;
+            }
+        }
+
     public:
         XMLParser()
         {
             generateXMLFiles();
             getClasses();
+            finalizeClasses_txt();
         }
 };
 
