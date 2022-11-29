@@ -63,7 +63,7 @@ class DoxygenConfig
         }
 };
 
-class XMLParser
+class Class_txtGenerator
 {
     private:
         void generateXMLFiles()
@@ -139,7 +139,7 @@ class XMLParser
         }
 
     public:
-        XMLParser()
+        Class_txtGenerator()
         {
             generateXMLFiles();
             getClasses();
@@ -150,7 +150,7 @@ class XMLParser
 int main(void)
 {
     DoxygenConfig tmp1;
-    XMLParser tmp2;
+    Class_txtGenerator tmp2;
 
     return 0;
 }
