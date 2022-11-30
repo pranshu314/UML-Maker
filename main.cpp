@@ -47,6 +47,11 @@ class DoxygenConfig
                     doxy_file.seekg(st_location);
                     doxy_file<<"GENERATE_HTML          = NO"<<endl;
                 }
+                else if(line=="CASE_SENSE_NAMES       = SYSTEM")
+                {
+                    doxy_file.seekg(st_location);
+                    doxy_file<<"CASE_SENSE_NAMES       = YES"<<endl;
+                }
             }
         }
     
