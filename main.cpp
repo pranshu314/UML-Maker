@@ -529,12 +529,105 @@ class RemoverOfExtraFiles
         }
 };
 
+class plantUmlClassDiagramFileGenerator
+{
+    private:
+        void createFile()
+        {
+            ifstream classes_file;
+            classes_file.open("class.txt");
+            string line, line2;
+            vector <string> class_names;
+            while(classes_file)
+            {
+                getline(classes_file, line);
+                if(line!="-1" && line2!=line)
+                {
+                    class_names.push_back(line);
+                    line2 = line;
+                } 
+                else if(line==line2)
+                {
+                    continue;
+                }
+                else
+                {
+                    break;
+                }
+            }
+            classes_file.close();
+            ofstream work_file;
+            work_file.open("plantUml.pu");
+            work_file<<"@startuml"<<endl<<"skinparam classAttributeIconSize 0"<<endl;
+            for(vector<string>::iterator it = class_names.begin(); it < class_names.end()-1; it++) 
+            {   
+                ifstream class_file;
+                string file_path("uml_files/");
+                file_path += *it;
+                file_path += ".txt";
+                class_file.open(file_path);
+                work_file<<"class "<<*it<<" {"<<endl;
+                while(class_file)
+                {
+                    getline(class_file, line);
+                    string lineToBeWritten;
+                    size_t found_colon = line.find(";");
+                    if(regex_match(line.substr(0, 6), regex("friend"))) 
+                    {
+                        lineToBeWritten = "    "+line.substr(int(found_colon)+2);
+                    } 
+                    else if(regex_match(line.substr(0, 8), regex("variable")))
+                    {   
+                        if(regex_match(line.substr(12, 7), regex("private"))) 
+                        {   
+                            lineToBeWritten = "    -"+line.substr(22, int(found_colon)-22)+":"+line.substr(int(found_colon)+1);
+                        }
+                        else if(regex_match(line.substr(12, 9), regex("protected")))
+                        {
+                            lineToBeWritten = "    #"+line.substr(24, int(found_colon)-24)+":"+line.substr(int(found_colon)+1);
+                        }
+                        else if(regex_match(line.substr(12, 6), regex("public"))) 
+                        {
+                            lineToBeWritten = "    +"+line.substr(21, int(found_colon)-21)+":"+line.substr(int(found_colon)+1);
+                        }
+                    }
+                    else if(regex_match(line.substr(0, 8), regex("function")))
+                    {
+                        if(regex_match(line.substr(12, 7), regex("private"))) 
+                        {   
+                            lineToBeWritten = "    -"+line.substr(22, int(found_colon)-22)+":"+line.substr(int(found_colon)+4);
+                        }
+                        else if(regex_match(line.substr(12, 9), regex("protected")))
+                        {
+                            lineToBeWritten = "    #"+line.substr(24, int(found_colon)-24)+":"+line.substr(int(found_colon)+4);
+                        }
+                        else if(regex_match(line.substr(12, 6), regex("public"))) 
+                        {
+                            lineToBeWritten = "    +"+line.substr(21, int(found_colon)-21)+":"+line.substr(int(found_colon)+4);
+                        }
+                    }
+                    work_file<<lineToBeWritten<<endl;
+                }
+                class_file.close();
+                work_file<<"}"<<endl<<endl;
+            }
+            work_file<<"@enduml"<<endl; 
+        }
+
+    public:
+        plantUmlClassDiagramFileGenerator() 
+        {
+            createFile();
+        }
+};
+
 int main(void)
 {
     DoxygenConfig tmp1;
     Class_txtGenerator tmp2;
     IndividualClassParser tmp3;
     RemoverOfExtraFiles tmp4;
+    plantUmlClassDiagramFileGenerator tmp5;
 
     return 0;
 }
