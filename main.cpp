@@ -228,12 +228,15 @@ class IndividualClassParser
                         getline(work_file,tmp_line);
                         if(regex_match(tmp_line,type_regex))
                         {
-                            regex type_2_regex(".*<type><ref .*>.*</ref></type>");
+                            regex type_2_regex(".*<type><ref .*>.*</ref>.*</type>");
                             if(regex_match(tmp_line,type_2_regex))
                             {
                                 size_t found_type = tmp_line.find(">");
                                 found_type=tmp_line.find(">",found_type+1);
                                 type=tmp_line.substr(int(found_type)+1,tmp_line.length()-13-int(found_type)-1);
+                                found_type=tmp_line.find(">",found_type+1);
+                                string type2=tmp_line.substr(int(found_type)+1,tmp_line.length()-7-int(found_type)-1);
+                                type+=type2;
                             }
                             else
                             {
@@ -348,6 +351,9 @@ class IndividualClassParser
                                 size_t found_type = tmp_line.find(">");
                                 found_type=tmp_line.find(">",found_type+1);
                                 type=tmp_line.substr(int(found_type)+1,tmp_line.length()-13-int(found_type)-1);
+                                found_type=tmp_line.find(">",found_type+1);
+                                string type2=tmp_line.substr(int(found_type)+1,tmp_line.length()-7-int(found_type)-1);
+                                type+=type2;
                             }
                             else
                             {
