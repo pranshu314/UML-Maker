@@ -370,7 +370,7 @@ class IndividualClassParser
                         string tmp_colon=" : ";
                         string tmp_semicolon=" ; ";
                         string tmp_space=" ";
-                        string final_member_name=func+prot+tmp_colon+name+tmp_semicolon+virt+tmp_space+_static+tmp_space+constant+tmp_space+type;
+                        string final_member_name=func+prot+tmp_colon+name+argsstring+tmp_semicolon+virt+tmp_space+_static+tmp_space+constant+tmp_space+type;
 
                         int copy_check=0;
                         ifstream copy_file;
