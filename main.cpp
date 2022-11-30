@@ -496,11 +496,28 @@ class IndividualClassParser
 
 };
 
+class RemoverOfExtraFiles
+{
+    private:
+        void removeFiles()
+        {   
+            system("rm -r xml/");
+            system("rm Doxyfile");
+        }
+
+    public:
+        RemoverOfExtraFiles()
+        {
+            removeFiles();
+        }
+};
+
 int main(void)
 {
     DoxygenConfig tmp1;
     Class_txtGenerator tmp2;
     IndividualClassParser tmp3;
+    RemoverOfExtraFiles tmp4;
 
     return 0;
 }
