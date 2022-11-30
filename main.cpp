@@ -350,7 +350,10 @@ class IndividualClassParser
                             {
                                 size_t found_type = tmp_line.find(">");
                                 found_type=tmp_line.find(">",found_type+1);
-                                type=tmp_line.substr(int(found_type)+1,tmp_line.length()-13-int(found_type)-1);
+                                size_t found_lessthan = tmp_line.find("<");
+                                found_lessthan=tmp_line.find(">",found_lessthan+1);
+                                found_lessthan=tmp_line.find(">",found_lessthan+1);
+                                type=tmp_line.substr(int(found_type)+1,int(found_lessthan)-int(found_type));
                                 found_type=tmp_line.find(">",found_type+1);
                                 string type2=tmp_line.substr(int(found_type)+1,tmp_line.length()-7-int(found_type)-1);
                                 type+=type2;
