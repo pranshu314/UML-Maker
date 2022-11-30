@@ -161,6 +161,7 @@ class IndividualClassParser
             regex derived_name_regex(">.*<");
             regex variable_regex(".*<memberdef kind=\"variable\" .*");
             regex function_regex(".*<memberdef kind=\"function\" .*");
+            regex friend_regex(".*<memberdef kind=\"friend\" .*");
 
             ifstream work_file;
             string line;
@@ -390,6 +391,61 @@ class IndividualClassParser
                             single_class_file.open(file_name, ios_base::app);
                             single_class_file<<final_member_name<<endl;
                         }
+                    }
+                    if(regex_match(line,friend_regex))
+                    {
+                        string tmp_line;
+                        string prot;
+                        string final_member_name;
+                        regex definition_regex(".*<definition>.*</definition>");
+
+                        size_t found_prot = line.find("prot=");
+                        if(line.substr(int(found_prot)+6,6)=="public")
+                        {
+                            prot="public";
+                        }
+                        else if(line.substr(int(found_prot)+6,7)=="private")
+                        {
+                            prot="private";
+                        }
+                        else if(line.substr(int(found_prot)+6,9)=="protected")
+                        {
+                            prot="protected";
+                        }
+
+                        getline(work_file,tmp_line);
+                        getline(work_file,tmp_line);
+                        if(regex_match(tmp_line,definition_regex))
+                        {
+                            final_member_name=tmp_line.substr(20,tmp_line.length()-33);
+                        }
+                        final_member_name="friend :: "+prot+" ; "+final_member_name;
+
+                        int copy_check=0;
+                        ifstream copy_file;
+                        copy_file.open("uml_files/"+class_name+".txt");
+                        while(copy_file)
+                        {
+                            string line_from_file;
+                            getline(copy_file,line_from_file);
+                            if(line_from_file==final_member_name)
+                            {
+                                copy_check+=1;
+                            }
+                            else if(line=="-1")
+                            {
+                                break;
+                            }
+                        }
+                        
+                        if(copy_check==0)
+                        {
+                            ofstream single_class_file;
+                            string file_name="uml_files/"+class_name+".txt";
+                            single_class_file.open(file_name, ios_base::app);
+                            single_class_file<<final_member_name<<endl;
+                        }
+
                     }
 
                     line2=line;
