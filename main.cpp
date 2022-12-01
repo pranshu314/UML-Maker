@@ -563,19 +563,22 @@ class plantUmlClassDiagramFileGenerator
             inheritance_file.open("uml_files/inheritance.txt");
             if(inheritance_file) 
             {
-                cout<<"HI"<<endl<<endl;
                 while(inheritance_file)
                 {
                     getline(inheritance_file, line);
-                    string lineToBeWritten;
-                    size_t found_lessthan = line.find("<");
-                    size_t found_greaterthan = line.find(">");
-                    lineToBeWritten = line.substr(0, int(found_greaterthan)-3);
-                    lineToBeWritten += " <|-- ";
-                    lineToBeWritten += line.substr(int(found_greaterthan)+1, int(found_greaterthan)-int(found_lessthan));
-                    work_file<<lineToBeWritten<<endl;
+                    if(line != "") 
+                    {
+                        string lineToBeWritten;
+                        size_t found_lessthan = line.find("<");
+                        size_t found_greaterthan = line.find(">");
+                        lineToBeWritten = line.substr(0, int(found_greaterthan)-3);
+                        lineToBeWritten += " <|-- ";
+                        lineToBeWritten += line.substr(int(found_greaterthan)+1, int(found_lessthan)-int(found_greaterthan)-1);
+                        work_file<<lineToBeWritten<<endl;
+                    }
                 } 
             }
+            work_file<<endl;
             inheritance_file.close();
             for(vector<string>::iterator it = class_names.begin(); it < class_names.end()-1; it++) 
             {   
