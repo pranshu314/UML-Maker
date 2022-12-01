@@ -520,6 +520,9 @@ class RemoverOfExtraFiles
         {   
             system("rm -r xml/");
             system("rm Doxyfile");
+            system("rm -r uml_files");
+            system("rm class.txt");
+            system("rm plantUml.pu");
         }
 
     public:
@@ -642,13 +645,24 @@ class plantUmlClassDiagramFileGenerator
         }
 };
 
+class GenerateImg
+{
+    public:
+        GenerateImg()
+        {
+            system("python3 -m plantuml plantUml.pu -s https://www.plantuml.com/plantuml/svg/");
+        }
+};
+
 int main(void)
 {
-    DoxygenConfig tmp1;
-    Class_txtGenerator tmp2;
-    IndividualClassParser tmp3;
-    RemoverOfExtraFiles tmp4;
-    plantUmlClassDiagramFileGenerator tmp5;
+    DoxygenConfig generate_doxyfile;
+    Class_txtGenerator genetate_class_txt_files;
+    IndividualClassParser parse_individual_classes;
+    plantUmlClassDiagramFileGenerator generate_puml_file;
+    GenerateImg generate_png_img;
+    RemoverOfExtraFiles remove_extra_files;
+    
 
     return 0;
 }
