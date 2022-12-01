@@ -559,6 +559,24 @@ class plantUmlClassDiagramFileGenerator
             ofstream work_file;
             work_file.open("plantUml.pu");
             work_file<<"@startuml"<<endl<<"skinparam classAttributeIconSize 0"<<endl;
+            ifstream inheritance_file;
+            inheritance_file.open("uml_files/inheritance.txt");
+            if(inheritance_file) 
+            {
+                cout<<"HI"<<endl<<endl;
+                while(inheritance_file)
+                {
+                    getline(inheritance_file, line);
+                    string lineToBeWritten;
+                    size_t found_lessthan = line.find("<");
+                    size_t found_greaterthan = line.find(">");
+                    lineToBeWritten = line.substr(0, int(found_greaterthan)-3);
+                    lineToBeWritten += " <|-- ";
+                    lineToBeWritten += line.substr(int(found_greaterthan)+1, int(found_greaterthan)-int(found_lessthan)+1);
+                    work_file<<lineToBeWritten<<endl;
+                } 
+            }
+            inheritance_file.close();
             for(vector<string>::iterator it = class_names.begin(); it < class_names.end()-1; it++) 
             {   
                 ifstream class_file;
