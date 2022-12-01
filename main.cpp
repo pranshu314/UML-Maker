@@ -572,7 +572,7 @@ class plantUmlClassDiagramFileGenerator
                     size_t found_greaterthan = line.find(">");
                     lineToBeWritten = line.substr(0, int(found_greaterthan)-3);
                     lineToBeWritten += " <|-- ";
-                    lineToBeWritten += line.substr(int(found_greaterthan)+1, int(found_greaterthan)-int(found_lessthan)+1);
+                    lineToBeWritten += line.substr(int(found_greaterthan)+1, int(found_greaterthan)-int(found_lessthan));
                     work_file<<lineToBeWritten<<endl;
                 } 
             }
