@@ -69,7 +69,7 @@ class DoxygenConfig
         }
 };
 
-class Class_txtGenerator
+class txtGeneratorForAllClasses
 {
     private:
         void generateXMLFiles()
@@ -145,7 +145,7 @@ class Class_txtGenerator
         }
 
     public:
-        Class_txtGenerator()
+        txtGeneratorForAllClasses()
         {
             generateXMLFiles();
             getClasses();
@@ -156,11 +156,11 @@ class Class_txtGenerator
 class IndividualClassParser
 {
     private:
-        void singleClassFileGenerator(string class_name, string singleFileName)
+        void singleClassFileGenerator(string class_name, string single_file_name)
         {
             system("mkdir uml_files");
             //cout<<"\n1\n";
-            cout<<singleFileName;
+            cout<<single_file_name;
             cout<<"\n";
             regex derived_regex(".*<derivedcompoundref refid=.*");
             regex derived_name_regex(">.*<");
@@ -171,7 +171,7 @@ class IndividualClassParser
             ifstream work_file;
             string line;
             string line2;
-            work_file.open(singleFileName);
+            work_file.open(single_file_name);
             while(work_file)
             {
                 //cout<<"\n2\n";
@@ -233,10 +233,10 @@ class IndividualClassParser
                             {
                                 size_t found_type = tmp_line.find(">");
                                 found_type=tmp_line.find(">",found_type+1);
-                                size_t found_lessthan = tmp_line.find("<");
-                                found_lessthan=tmp_line.find("<",found_lessthan+1);
-                                found_lessthan=tmp_line.find("<",found_lessthan+1);
-                                type=tmp_line.substr(int(found_type)+1,int(found_lessthan)-int(found_type)-1);
+                                size_t found_less_than = tmp_line.find("<");
+                                found_less_than=tmp_line.find("<",found_less_than+1);
+                                found_less_than=tmp_line.find("<",found_less_than+1);
+                                type=tmp_line.substr(int(found_type)+1,int(found_less_than)-int(found_type)-1);
                                 found_type=tmp_line.find(">",found_type+1);
                                 string type2=tmp_line.substr(int(found_type)+1,tmp_line.length()-7-int(found_type)-1);
                                 type+=type2;
@@ -353,10 +353,10 @@ class IndividualClassParser
                             {
                                 size_t found_type = tmp_line.find(">");
                                 found_type=tmp_line.find(">",found_type+1);
-                                size_t found_lessthan = tmp_line.find("<");
-                                found_lessthan=tmp_line.find("<",found_lessthan+1);
-                                found_lessthan=tmp_line.find("<",found_lessthan+1);
-                                type=tmp_line.substr(int(found_type)+1,int(found_lessthan)-int(found_type)-1);
+                                size_t found_less_than = tmp_line.find("<");
+                                found_less_than=tmp_line.find("<",found_less_than+1);
+                                found_less_than=tmp_line.find("<",found_less_than+1);
+                                type=tmp_line.substr(int(found_type)+1,int(found_less_than)-int(found_type)-1);
                                 found_type=tmp_line.find(">",found_type+1);
                                 string type2=tmp_line.substr(int(found_type)+1,tmp_line.length()-7-int(found_type)-1);
                                 type+=type2;
@@ -494,13 +494,13 @@ class IndividualClassParser
                 else
                 {
                     string class_name=line;
-                    string singleFileName="class";
+                    string single_file_name="class";
                     string tmp1=".xml";
                     string tmp2="xml/";
-                    singleFileName+=class_name;
-                    singleFileName+=tmp1;
-                    singleFileName=tmp2+singleFileName;
-                    singleClassFileGenerator(class_name,singleFileName);
+                    single_file_name+=class_name;
+                    single_file_name+=tmp1;
+                    single_file_name=tmp2+single_file_name;
+                    singleClassFileGenerator(class_name,single_file_name);
                 }
             }
         }
@@ -571,13 +571,13 @@ class plantUmlClassDiagramFileGenerator
                     getline(inheritance_file, line);
                     if(line != "") 
                     {
-                        string lineToBeWritten;
-                        size_t found_lessthan = line.find("<");
+                        string line_to_be_written;
+                        size_t found_less_than = line.find("<");
                         size_t found_greaterthan = line.find(">");
-                        lineToBeWritten = line.substr(0, int(found_greaterthan)-3);
-                        lineToBeWritten += " <|-- ";
-                        lineToBeWritten += line.substr(int(found_greaterthan)+1, int(found_lessthan)-int(found_greaterthan)-1);
-                        work_file<<lineToBeWritten<<endl;
+                        line_to_be_written = line.substr(0, int(found_greaterthan)-3);
+                        line_to_be_written += " <|-- ";
+                        line_to_be_written += line.substr(int(found_greaterthan)+1, int(found_less_than)-int(found_greaterthan)-1);
+                        work_file<<line_to_be_written<<endl;
                     }
                 } 
             }
@@ -594,43 +594,43 @@ class plantUmlClassDiagramFileGenerator
                 while(class_file)
                 {
                     getline(class_file, line);
-                    string lineToBeWritten;
+                    string line_to_be_written;
                     size_t found_colon = line.find(";");
                     if(regex_match(line.substr(0, 6), regex("friend"))) 
                     {
-                        lineToBeWritten = "    "+line.substr(int(found_colon)+2);
+                        line_to_be_written = "    "+line.substr(int(found_colon)+2);
                     } 
                     else if(regex_match(line.substr(0, 8), regex("variable")))
                     {   
                         if(regex_match(line.substr(12, 7), regex("private"))) 
                         {   
-                            lineToBeWritten = "    -"+line.substr(22, int(found_colon)-22)+":"+line.substr(int(found_colon)+1);
+                            line_to_be_written = "    -"+line.substr(22, int(found_colon)-22)+":"+line.substr(int(found_colon)+1);
                         }
                         else if(regex_match(line.substr(12, 9), regex("protected")))
                         {
-                            lineToBeWritten = "    #"+line.substr(24, int(found_colon)-24)+":"+line.substr(int(found_colon)+1);
+                            line_to_be_written = "    #"+line.substr(24, int(found_colon)-24)+":"+line.substr(int(found_colon)+1);
                         }
                         else if(regex_match(line.substr(12, 6), regex("public"))) 
                         {
-                            lineToBeWritten = "    +"+line.substr(21, int(found_colon)-21)+":"+line.substr(int(found_colon)+1);
+                            line_to_be_written = "    +"+line.substr(21, int(found_colon)-21)+":"+line.substr(int(found_colon)+1);
                         }
                     }
                     else if(regex_match(line.substr(0, 8), regex("function")))
                     {
                         if(regex_match(line.substr(12, 7), regex("private"))) 
                         {   
-                            lineToBeWritten = "    -"+line.substr(22, int(found_colon)-22)+":"+line.substr(int(found_colon)+4);
+                            line_to_be_written = "    -"+line.substr(22, int(found_colon)-22)+":"+line.substr(int(found_colon)+4);
                         }
                         else if(regex_match(line.substr(12, 9), regex("protected")))
                         {
-                            lineToBeWritten = "    #"+line.substr(24, int(found_colon)-24)+":"+line.substr(int(found_colon)+4);
+                            line_to_be_written = "    #"+line.substr(24, int(found_colon)-24)+":"+line.substr(int(found_colon)+4);
                         }
                         else if(regex_match(line.substr(12, 6), regex("public"))) 
                         {
-                            lineToBeWritten = "    +"+line.substr(21, int(found_colon)-21)+":"+line.substr(int(found_colon)+4);
+                            line_to_be_written = "    +"+line.substr(21, int(found_colon)-21)+":"+line.substr(int(found_colon)+4);
                         }
                     }
-                    work_file<<lineToBeWritten<<endl;
+                    work_file<<line_to_be_written<<endl;
                 }
                 class_file.close();
                 work_file<<"}"<<endl<<endl;
@@ -650,14 +650,20 @@ class GenerateImg
     public:
         GenerateImg()
         {
-            system("python3 -m plantuml plantUml.pu -s https://www.plantuml.com/plantuml/svg/");
+            #ifdef _WIN32 
+                system("python -m plantuml plantUml.pu");
+                system("python3 -m plantuml plantUml.pu");
+            #else
+                system("python3 -m plantuml plantUml.pu -s https://www.plantuml.com/plantuml/svg/");
+                system("python -m plantuml plantUml.pu -s https://www.plantuml.com/plantuml/svg/");
+            #endif
         }
 };
 
 int main(void)
 {
     DoxygenConfig generate_doxyfile;
-    Class_txtGenerator genetate_class_txt_files;
+    txtGeneratorForAllClasses genetate_class_txt_files;
     IndividualClassParser parse_individual_classes;
     plantUmlClassDiagramFileGenerator generate_puml_file;
     GenerateImg generate_png_img;
