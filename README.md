@@ -35,7 +35,6 @@ This project can be used to create UML-diagrams for C++ projects easily, using o
 
 - We create the UML diagram using python plantuml library and the .pu file using the command "python -m plantuml plantUml.pu"
 
-- 
 
 ## How to Run
 
